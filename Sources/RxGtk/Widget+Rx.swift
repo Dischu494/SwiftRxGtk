@@ -122,35 +122,35 @@ public extension Reactive where Base: Widget {
     /// Bindable sink for `marginBottom` property.
     var marginBottom: Binder<Int> {
         return Binder(self.base) { widget, value in
-            widget.setMarginBottom(margin: CInt(value))
+            widget.setMarginBottom(margin: value)
         }
     }
 
     /// Bindable sink for `marginTop` property.
     var marginTop: Binder<Int> {
         return Binder(self.base) { widget, value in
-            widget.setMarginTop(margin: CInt(value))
+            widget.setMarginTop(margin: value)
         }
     }
 
     /// Bindable sink for `marginStart` property.
     var marginStart: Binder<Int> {
         return Binder(self.base) { widget, value in
-            widget.setMarginStart(margin: CInt(value))
+            widget.setMarginStart(margin: value)
         }
     }
 
     /// Bindable sink for `marginEnd` property.
     var marginEnd: Binder<Int> {
         return Binder(self.base) { widget, value in
-            widget.setMarginEnd(margin: CInt(value))
+            widget.setMarginEnd(margin: value)
         }
     }
 
     /// Bindable sink for `sizeRequest` property.
     var requestedSize: Binder<(width: Int, height: Int)> {
         return Binder(self.base) { widget, value in
-            widget.setSizeRequest(width: CInt(value.width), height: CInt(value.height))
+            widget.setSizeRequest(width: value.width, height: value.height)
         }
     }
 

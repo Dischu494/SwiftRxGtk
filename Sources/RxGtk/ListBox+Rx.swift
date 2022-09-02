@@ -79,8 +79,8 @@ public class RxListBoxReactiveArrayDataSource<Element>: RxListBoxDataSource, Sec
         itemModels = observedElements
         var nextChild = listBox.children
         while let row = nextChild {
-            nextChild = row.pointee.next
-            guard let rowPtr = row.pointee.data else { continue }
+            nextChild = row.next
+            guard let rowPtr = row._ptr.pointee.data else { continue }
             let listRow = ListBoxRow(rowPtr.assumingMemoryBound(to: GtkListBoxRow.self))
             cachedRows.append(listRow)
             listBox.remove(widget: WidgetRef(raw: rowPtr))
@@ -88,7 +88,7 @@ public class RxListBoxReactiveArrayDataSource<Element>: RxListBoxDataSource, Sec
         for (i, element) in observedElements.enumerated() {
             let cachedRow: ListBoxRow? = i < cachedRows.count ? cachedRows[i] : nil
             let row = cellFactory(listBox, i, element, cachedRow)
-            listBox.insert(child: row, position: CInt(i))
+            listBox.insert(child: row, position: i)
         }
     }
 }
@@ -151,14 +151,14 @@ public extension ObservableType {
     func subscribeProxyDataSource(ofWidget object: Widget, dataSource: RxListBoxDataSource, retainDataSource: Bool = true, binding: @escaping (RxListBoxDataSource, Event<Element>) -> Void) -> Disposable {
         let proxy = RxListBoxDataSource.proxyForObject(object)
         let subscription = self.asObservable()
-            .observeOn(MainScheduler())
-            .catchError { error in
+            .observe(on: MainScheduler())
+            .catch { error in
                 bindingErrorToInterface(error)
                 return Observable.empty()
             }
             // source can never end, otherwise it would release the subscriber, and deallocate the data source
             .concat(Observable.never())
-            .takeUntil(object.rx.deallocated)
+            .take(until: object.rx.deallocated)
             .subscribe { [weak object] (event: Event<Element>) in
                 if let object = object {
                     let assignedProxy = RxListBoxDataSource.assignedProxyFor(object)

@@ -22,10 +22,10 @@ extension Reactive where Base == ObjectRef {
     /// - Parameters:
     ///   - type: the type of the observed property
     ///   - property: name of the observed property
-    ///   - options: `BindingFlags` to use (defaults to `.sync_create`)
+    ///   - options: `BindingFlags` to use (defaults to `.syncCreate`)
     ///   - retainSelf: `true` if the observable should retain the object
     /// - Returns: an observable for the given property
-    public func observe<E, P: PropertyNameProtocol>(_ property: P, options: BindingFlags = .sync_create, retainSelf: Bool = true) -> Observable<E?> {
+    public func observe<E, P: PropertyNameProtocol>(_ property: P, options: BindingFlags = .syncCreate, retainSelf: Bool = true) -> Observable<E?> {
         return PropertyObservable(object: base, property: property, options: options, retainTarget: retainSelf).asObservable()
     }
 }
@@ -36,10 +36,10 @@ public extension Reactive where Base: Object {
     /// - Parameters:
     ///   - type: the type of the observed property
     ///   - property: name of the observed property
-    ///   - options: `BindingFlags` to use (defaults to `.sync_create`)
+    ///   - options: `BindingFlags` to use (defaults to `.syncCreate`)
     ///   - retainSelf: `true` if the observable should retain the object
     /// - Returns: an observable for the given property
-    func observe<E, P: PropertyNameProtocol>(_ property: P, options: BindingFlags = .sync_create, retainSelf: Bool = true) -> Observable<E?> {
+    func observe<E, P: PropertyNameProtocol>(_ property: P, options: BindingFlags = .syncCreate, retainSelf: Bool = true) -> Observable<E?> {
         return PropertyObservable(object: ObjectRef(base.object_ptr), property: property, options: options, retainTarget: retainSelf).asObservable()
     }
 
@@ -69,10 +69,10 @@ public extension Reactive where Base: ObjectProtocol {
     /// - Parameters:
     ///   - type: the type of the observed property
     ///   - property: name of the observed property
-    ///   - options: `BindingFlags` to use (defaults to `.sync_create`)
+    ///   - options: `BindingFlags` to use (defaults to `.syncCreate`)
     ///   - retainSelf: `true` if the observable should retain the object
     /// - Returns: an observable for the given property
-    func observe<E, P: PropertyNameProtocol>(_ property: P, options: BindingFlags = .sync_create, retainSelf: Bool = true) -> Observable<E?> {
+    func observe<E, P: PropertyNameProtocol>(_ property: P, options: BindingFlags = .syncCreate, retainSelf: Bool = true) -> Observable<E?> {
         return PropertyObservable(object: ObjectRef(base.object_ptr), property: property, options: options, retainTarget: retainSelf).asObservable()
     }
 }
@@ -143,7 +143,7 @@ public class PropertyObservable<Element, P: PropertyNameProtocol>: ObservableTyp
     public var options: BindingFlags
     public var retainTarget: Bool
 
-    public init(object: ObjectRef, property: P, options: BindingFlags = .sync_create, retainTarget: Bool = false) {
+    public init(object: ObjectRef, property: P, options: BindingFlags = .syncCreate, retainTarget: Bool = false) {
         self.target = object
         self.propertyName = PropertyName(property)
         self.options = options
@@ -180,7 +180,7 @@ fileprivate func property_observer_class_init(_ cl: gpointer?, _: gpointer?) {
     guard let object_class = cl?.assumingMemoryBound(to: GObjectClass.self) else { return }
     object_class.pointee.set_property = property_observer_set_property
     object_class.pointee.get_property = property_observer_get_property
-    let readwrite = ParamFlags(rawValue: 3)
+    let readwrite = GParamFlags(rawValue: 3)
     g_object_class_install_property(object_class, 1, g_param_spec_string(dummy_property.name, dummy_property.name, "Dummy property", "", readwrite))
 }
 
