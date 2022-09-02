@@ -8,7 +8,7 @@ let package = Package(
         .library(name: "RxGtk", targets: ["RxGtk"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/ReactiveX/RxSwift.git", .branch("master")),
+        .package(url: "https://github.com/ReactiveX/RxSwift.git", .branch("main")),
         .package(url: "https://github.com/rhx/SwiftGtk.git", .branch("master")),
     ],
     targets: [
